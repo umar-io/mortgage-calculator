@@ -5,17 +5,17 @@ import articleLogo from "./assets/illustration-empty.svg";
 import buttonImg from "./assets/icon-calculator.svg";
 
 interface FormDataProps {
-  mortgage_amount: number | string;
-  mortgage_term: number | string;
-  mortgage_interest: number | string;
+  mortgage_amount: number;
+  mortgage_term: number;
+  mortgage_interest: number;
   mortgage_type: string;
 }
 
 const App = () => {
   const [formData, setFormData] = useState<FormDataProps>({
-    mortgage_amount: "",
-    mortgage_term: "",
-    mortgage_interest: "",
+    mortgage_amount: 0,
+    mortgage_term: 0,
+    mortgage_interest: 0,
     mortgage_type: "",
   });
 
@@ -46,9 +46,9 @@ const App = () => {
 
   const clearAll = () => {
     setFormData({
-      mortgage_amount: "",
-      mortgage_term: "",
-      mortgage_interest: "",
+      mortgage_amount: 0,
+      mortgage_term: 0,
+      mortgage_interest: 0,
       mortgage_type: "Fixed",
     });
     setError({
@@ -100,7 +100,28 @@ const App = () => {
     setError(newError);
 
     if (isValid) {
-      console.log("calculation in progress");
+      if (formData.mortgage_type === "Repayment") {
+        const mortgageAmount = formData.mortgage_amount;
+        const mortgageInterest = formData.mortgage_interest;
+        const mortgageTermYear = formData.mortgage_term;
+
+        const mortgageTermMonth = mortgageTermYear * 12;
+        const monthlyMortgageInterest = mortgageInterest / 100 / 12;
+
+        const monthlyPayment =
+          (mortgageAmount *
+            (monthlyMortgageInterest *
+              Math.pow(1 + monthlyMortgageInterest, mortgageTermMonth))) /
+          (Math.pow(1 + monthlyMortgageInterest, mortgageTermMonth) - 1);
+
+        console.log(monthlyPayment.toFixed(2));
+
+        const totalPayment = monthlyPayment * mortgageTermMonth;
+        console.log(totalPayment.toFixed(2));
+      }
+      if(formData.mortgage_type === "Interest Only"){
+        console.log('coming');
+      }
     }
   };
 
@@ -125,7 +146,9 @@ const App = () => {
                 label="Mortgage Amount"
                 unit="£"
                 type="number"
-                value={formData.mortgage_amount}
+                value={
+                  formData.mortgage_amount === 0 ? "" : formData.mortgage_amount
+                }
                 placeholder="Enter amount"
                 divClassName={`absolute left-[2px] top-1/2 transform -translate-y-[25%] ${
                   error.mortgage_amount_error
@@ -152,7 +175,9 @@ const App = () => {
                   label="Mortgage Term"
                   unit="Years"
                   type="number"
-                  value={formData.mortgage_term}
+                  value={
+                    formData.mortgage_term === 0 ? "" : formData.mortgage_term
+                  }
                   placeholder="Enter term"
                   divClassName={`absolute right-[2px] top-1/2 transform -translate-y-[25%] ${
                     error.mortgage_term_error
@@ -178,7 +203,11 @@ const App = () => {
                   label="Interest Rate"
                   unit="%"
                   type="number"
-                  value={formData.mortgage_interest}
+                  value={
+                    formData.mortgage_interest === 0
+                      ? ""
+                      : formData.mortgage_interest
+                  }
                   placeholder="Enter rate"
                   divClassName={`absolute right-[2px] top-1/2 transform -translate-y-[25%] ${
                     error.mortgage_interest_error
