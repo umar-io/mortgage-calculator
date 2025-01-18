@@ -24,13 +24,13 @@ const App = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-  
+
     // Handle the case when the input field is 'mortgage_amount' (which needs formatting)
     if (name === "mortgage_amount") {
       // Remove commas and parse the numeric value
       const rawValue = value.replace(/,/g, "");
       const numericValue = rawValue ? parseFloat(rawValue) : 0;
-  
+
       // If it's a valid number, update the state
       if (!isNaN(numericValue)) {
         setFormData((prevState) => ({
@@ -38,7 +38,7 @@ const App = () => {
           [name]: numericValue,
         }));
       }
-  
+
       // Optionally update the input display value with commas
       event.target.value = numericValue.toLocaleString("en-US");
     } else {
@@ -49,7 +49,6 @@ const App = () => {
       }));
     }
   };
-  
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -142,7 +141,21 @@ const App = () => {
         setTotalPayment(parseFloat(totalPayment.toFixed(2)));
       }
       if (formData.mortgage_type === "Interest Only") {
-        console.log("coming");
+        const mortgageAmount = formData.mortgage_amount;
+        const mortgageInterest = formData.mortgage_interest;
+        const mortgagePeriod = formData.mortgage_term;
+
+        const decimalizedInterest = mortgageInterest / 100; //convert percentage to decimal
+
+        const monthlyPayment = (mortgageAmount * decimalizedInterest) / 12;
+
+        setMonthlyPayment(parseFloat(monthlyPayment.toFixed(2)));
+
+        const mortgagePeriodToMonth = mortgagePeriod * 12; //converts the term of year to months
+
+        const totalInterestPaymnet = monthlyPayment * mortgagePeriodToMonth;
+
+        setTotalPayment(parseFloat(totalInterestPaymnet.toFixed(2)));
       }
     }
   };
