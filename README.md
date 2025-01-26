@@ -28,3 +28,21 @@ Follow these steps to set up the project locally:
 
    ```bash
    git clone https://github.com/your-username/mortgage-calculator.git
+   
+2. Navigate to the project directory:
+
+   ```bash
+   cd mortgage-calculator
+
+3. Install dependencies:
+
+   ```bash
+   npm install
+
+4. Run the development server:
+   ```bash
+   npm run dev
+
+5. Open the app in your browser: Visit (http://localhost:5173) to view the app.
+
+yay 🎉🎉🎉
